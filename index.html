@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Data Stream</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin: 0;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        #messages {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #3498db;
+            background-color: #fff;
+            border-radius: 8px;
+            height: 300px;
+            width: 100%;
+            max-width: 600px;
+            overflow-y: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+        .message:nth-child(odd) {
+            background-color: #dfe6e9;
+        }
+        #inputContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        #usernameInput {
+            padding: 12px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        #messageInput {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        #sendButton {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #sendButton:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Real-time Data Stream!</h1>
+    <h2>Interact and Share Messages Instantly</h2>
+    
+    <!-- Notification Area -->
+    <div class="notification" id="notification">New message received!</div>
+
+    <div id="messages"></div>
+    
+    <div id="inputContainer">
+        <input id="usernameInput" type="text" placeholder="Enter your username..." />
+        <input id="messageInput" type="text" placeholder="Type your message..." />
+        <button id="sendButton">Send</button>
+    </div>
+
+    <footer>Designed by Mohammad Shafay Joyo</footer>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+        const messageInput = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const usernameInput = document.getElementById("usernameInput");
+        const notificationDiv = document.getElementById("notification");
+
+        const ws = new WebSocket("ws://localhost:8080/ws");
+
+        // Set a username when the connection is opened
+        ws.onopen = function() {
+            console.log("Connected to the server");
+        };
+
+        // Handle incoming messages
+        ws.onmessage = function(event) {
+            const msg = document.createElement("div");
+            const timestamp = new Date().toLocaleTimeString();
+            msg.classList.add("message");
+            msg.textContent = `[${timestamp}] ${event.data}`;
+            messagesDiv.appendChild(msg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+            
+            // Show notification for new messages
+            showNotification();
+        };
+
+        // Show notification for new messages
+        function showNotification() {
+            notificationDiv.style.display = "block";
+            setTimeout(() => {
+                notificationDiv.style.display = "none"; // Hide after 2 seconds
+            }, 2000);
+        }
+
+        // Send message on button click
+        sendButton.onclick = function() {
+            const message = messageInput.value;
+            const username = usernameInput.value || 'Anonymous'; // Default username
+
+            if (message) {
+                const fullMessage = `${username}: ${message}`; // Include username
+                ws.send(fullMessage);
+                messageInput.value = ''; // Clear input after sending
+            }
+        };
+
+        // Handle WebSocket closure
+        ws.onclose = function() {
+            console.log("Disconnected from the server");
+        };
+
+        // Handle WebSocket errors
+        ws.onerror = function(error) {
+            console.error("WebSocket error:", error);
+            alert("An error occurred with the WebSocket connection.");
+        };
+    </script>
+</body>
+</html>
