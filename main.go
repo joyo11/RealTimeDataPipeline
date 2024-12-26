@@ -1,3 +1,4 @@
+// Copyright © 2024 Mohammad Shafay Joyo
 package main
 
 import (
