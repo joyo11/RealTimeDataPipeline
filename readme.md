@@ -20,7 +20,7 @@ The **Real-time Data Stream** project is a WebSocket-based application that enab
 
 - **Go**: Backend server built using Go and the Gorilla WebSocket package.
 - **HTML/CSS/JavaScript**: Frontend interface created with standard web technologies.
-- **Python**: Optional, for serving static files.
+- **Python**: For serving static files.
 
 ---
 
