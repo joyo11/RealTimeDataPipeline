@@ -1,7 +1,6 @@
-// Copyright © 2024 Mohammad Shafay Joyo
+// Copyright © 2025 Mohammad Shafay Joyo
 
 package main
-
 import (
 	"fmt"
 	"net/http"
