@@ -1,5 +1,4 @@
 // Copyright © 2025 Mohammad Shafay Joyo
-
 package main
 import (
 	"fmt"
@@ -7,13 +6,11 @@ import (
 	"sync"
 	"github.com/gorilla/websocket"
 )
-
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
 }
-
 var connections = make(map[*websocket.Conn]bool)
 var messageHistory []string
 var mu sync.Mutex // To protect messageHistory
@@ -55,7 +52,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		// Append message to history
+		// Append the message to history
 		mu.Lock()
 		messageHistory = append(messageHistory, msg)
 		mu.Unlock()
