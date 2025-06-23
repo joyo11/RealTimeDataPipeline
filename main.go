@@ -57,7 +57,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		messageHistory = append(messageHistory, msg)
 		mu.Unlock()
 
-		// Broadcast the message to all connected clients
+		// Broadcast the message to all connected client
 		broadcastMessage(msg)
 	}
 }
