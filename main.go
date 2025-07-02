@@ -1,5 +1,6 @@
 // Copyright © 2025 Mohammad Shafay Joyo
 package main
+
 import (
 	"fmt"
 	"net/http"
@@ -13,7 +14,7 @@ var upgrader = websocket.Upgrader{
 }
 var connections = make(map[*websocket.Conn]bool)
 var messageHistory []string
-var mu sync.Mutex // To protect messageHistory
+var mu sync.Mutex // To protect message History
 
 func main() {
 	http.HandleFunc("/ws", handleConnections)
