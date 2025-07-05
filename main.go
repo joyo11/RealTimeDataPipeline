@@ -14,7 +14,7 @@ var upgrader = websocket.Upgrader{
 }
 var connections = make(map[*websocket.Conn]bool)
 var messageHistory []string
-var mu sync.Mutex // To protect message History
+var mu sync.Mutex // To protect the message History
 
 func main() {
 	http.HandleFunc("/ws", handleConnections)
